@@ -1,0 +1,6 @@
+classes=20
+train=data/0712_train.txt
+valid=data/0712_val.txt
+names=data/voc.names
+backup = backup
+#eval = coco
