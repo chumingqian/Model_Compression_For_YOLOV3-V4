@@ -1,3 +1,7 @@
+
+# Hi,this  repository  is  heavily borrrowed  from these two  repository,  https://github.com/tanluren/yolov3-channel-and-layer-pruning  and  https://github.com/SpursLipu/YOLOv3v4-ModelCompression-MultidatasetTraining-Multibackbone  if  you want the  details  try them .
+
+
 # YOLOv3-ModelCompression-MultidatasetTraining
 
 [README in chinese](https://github.com/SpursLipu/YOLOv3v4-ModelCompression-MultidatasetTraining-Multibackbone/blob/master/README_in_Chinese.md)
