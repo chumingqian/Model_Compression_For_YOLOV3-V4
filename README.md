@@ -1,6 +1,4 @@
 
-# Hi,this  repository  is  heavily borrrowed  from these two  repository,  https://github.com/tanluren/yolov3-channel-and-layer-pruning  and  https://github.com/SpursLipu/YOLOv3v4-ModelCompression-MultidatasetTraining-Multibackbone  if  you want the  details  try them .
-
 
 # YOLOv3-ModelCompression-MultidatasetTraining
 
@@ -16,6 +14,11 @@ This project mainly include three parts.
 
 Source using Pytorch implementation to [ultralytics/yolov3](https://github.com/ultralytics/yolov3) for yolov3 source code.
 Pruning method based on BN layer by [coldlarry/YOLOv3-complete-pruning](https://github.com/coldlarry/YOLOv3-complete-pruning), thank you to both of you.
+
+
+#  Note:
+this  repository  is  heavily borrrowed  from these two  repository,  https://github.com/tanluren/yolov3-channel-and-layer-pruning  and  https://github.com/SpursLipu/YOLOv3v4-ModelCompression-MultidatasetTraining-Multibackbone  if  you want the  details  try them .
+
 
 # Update
  January 4, 2020. Provides download links and training methods to the Visdrone dataset.
