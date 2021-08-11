@@ -4,7 +4,7 @@ In this  repository  using the sparse training, group pruning and  knowledge dis
 
 # YOLOv3v4 -ModelCompression-Training
 
-This project mainly include three parts.
+This repository  project mainly include three parts.
 
 Part1.  Common training and sparse training(prepare for the channel pruning) for object detection datasets(COCO2017, VOC, OxforHand).
 
@@ -16,19 +16,20 @@ Source using Pytorch implementation to [ultralytics/yolov3](https://github.com/u
 
 For the  YOLOV4 pytorch version, try this https://github.com/Tianxiaomo/pytorch-YOLOv4.
 
----------
 
 ### Datasets and  Environment Requirements
 Make a COCO or VOC dataset for this project try here [dataset_for_Ultralytics_training](https://github.com/chumingqian/Make_Dataset-for-Ultralytics-yolov3v4).
 
 The environment is Pytorch >= 1.1.0 , see the ./requiremnts.txt and also can reference the [ultralytics/yolov3](https://github.com/ultralytics/yolov3) ./requirements.txt .
 
+---------
   
-###  Part1.Common training and sparse training(prepare for the channel pruning) training for object detection datasets
+###  Part1.Common training and sparse training(prepare for the channel pruning)  for object detection datasets
 
 1.1 For the common training use the following command: 
 
-   `python3 train.py --data ...  --cfg ...  -pt  --weights ...  --img_size ... --batch-size ... --epochs  ... ` the -pt means that will  use the pretrained  model's weight.
+   `python3 train.py --data ...  --cfg ...  -pt  --weights ...  --img_size ... --batch-size ... --epochs  ... ` :
+      ` -pt means that will  use the pretrained  model's weight`.
 
 1.2 For the sparse training use the:
 ```bash
@@ -45,7 +46,8 @@ python3 train.py --data ... --s 0.001 --prune 0  -pt --weights ... --cfg ... --i
 
 `--prune 2` is the sparsity of layer pruning.
 
-- details see the 2.1.
+-`details see the 2.1`.
+
 
 1.4 Notice for the sparse training:
 
@@ -67,6 +69,8 @@ python3 train.py --data ... --s 0.001 --prune 0  -pt --weights ... --cfg ... --i
 `python3 detect.py --data ... --cfg ... --source ...`: Detection a single image/video command, default address of source is data/samples, the output result is saved in the output file.
 
 
+-------
+
 
 ### Part2 Model compression algorithm including pruning and knowledge distillation.
 
@@ -81,12 +85,13 @@ python3 train.py --data ... --s 0.001 --prune 0  -pt --weights ... --cfg ... --i
 |layer-channel pruning |First, use channel pruning and then use layer pruning, and pruning rate was very high. |Accuracy may be affected. |
 
 2.2  Pruning the network command:
+
 -for the  channel pruning  types:
 ```bash
 python3 normal(or regular/shortcut/slim)_prune.py --cfg ... --data ... --weights ... --percent ...
 ```
--for the layer pruning(it is actually based on the channel pruning):
 
+-for the layer pruning(it is actually based on the channel pruning):
 ```bash
 python3 layer_prune.py --cfg ... --data ... --weights ... --shortcut ...
 
@@ -119,6 +124,9 @@ python train.py --data ... --batch-size ... --weights ... --cfg ... --img-size .
 
 Usually, the original(or unpruned model but has been sparse trained) model is used as the teacher model, and the post-compression model is used as the student model for distillation training to improve the mAP of student network.
 
+-----------
+
+
 
 
 ### Part3. A brief introduce for Network quantization
@@ -127,7 +135,9 @@ Usually, the original(or unpruned model but has been sparse trained) model is us
 
 - Most our  personal PC  machine  can not  run the quantized  model with this  int8  data type.
 
-- And quantization method  usually  co-operate with  specific hardware  platform,  such  as Xilinx  use Vitis Ai to quantize the model and deploy on the Zynq-ultraScale  series(like pynq-z2, ultra_96_v2, ZCU104);  Nvidia  use  TensorRT to quantize the model  and deploy  it on the Jetson (like Nano, TX1, TX2) ;  Here  are  the reference  we  use  their  tools  to deploy  our pruned  yolov4 network  on thier  hardware  target,  [On Ultra_96_v2](https://github.com/chumingqian/Deploy_Yolov4_On_Ultra96_v2), [On Jetson Nano](https://github.com/chumingqian/Deploy_Yolov4_On_Jetson_Nano).
+- And quantization method  usually  co-operate with  specific hardware  platform,  such  as Xilinx  use Vitis Ai to quantize the model and deploy on the Zynq-ultraScale  series(like pynq-z2, ultra_96_v2, ZCU104);  Nvidia  use  TensorRT to quantize the model  and deploy  it on the Jetson (like Nano, TX1, TX2) ;
+
+- Here  are  the reference [On Ultra_96_v2](https://github.com/chumingqian/Deploy_Yolov4_On_Ultra96_v2), [On Jetson Nano](https://github.com/chumingqian/Deploy_Yolov4_On_Jetson_Nano)  we  use  their  tools  quantize our pruned  yolov4 network  and deploy it on thier  hardware  target.
 
 
 3.2 Recently, the Pytorch 1.8 has launch a "torch.fx" module:
@@ -135,6 +145,7 @@ Usually, the original(or unpruned model but has been sparse trained) model is us
 -This would be a fortune for  us  to  reasearch  on  the  quantization;
 
 -We wish we  can bring  the other  repository  that  focus on  quantization,  God bless us.
+
 
 
 3.3 Quantize  command:
@@ -156,15 +167,14 @@ python train.py --data ... --batch-size ... --weights ... --cfg ... --img-size .
 
 ## Reference: 
 ----
-
+-Papers:
 Pruning method based on BN layer comes from [Learning Efficient Convolutional Networks through Network Slimming](https://arxiv.org/abs/1708.06519).
 
 Pruning without fine-tune [Rethinking the Smaller-Norm-Less-Informative Assumption in Channel Pruning of Convolution Layers](https://arxiv.org/pdf/1802.00124.pdf).
 
 Attenton transfer distilling [Paying More Attention to Attention: Improving the Performance of Convolutional Neural Networks via Attention Transfer](https://arxiv.org/abs/1612.03928)
 
------
-
+-Repositories:
 Channel pruning method based on BN layers for the  yolov3 and yolov4, we recommond the following repository:
 
 https://github.com/tanluren/yolov3-channel-and-layer-pruning
