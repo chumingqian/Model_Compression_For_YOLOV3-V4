@@ -6,11 +6,11 @@ In this  repository  using the sparse training, group pruning and  knowledge dis
 
 This project mainly include three parts.
 
-Part1.  Support a common training and sparse training(prepare for the channel pruning) for three object detection datasets(COCO2017, VOC, OxforHand)
+Part1.  Common training and sparse training(prepare for the channel pruning) for object detection datasets(COCO2017, VOC, OxforHand).
 
-Part2.  Support a general model compression algorithm including pruning and knowledge distillation.
+Part2.  General model compression algorithm including pruning and knowledge distillation.
 
-Part3.  Support for yolov4 and yolov3 netwrok.
+Part3.  A brief introduce for Network quantization .
 
 Source using Pytorch implementation to [ultralytics/yolov3](https://github.com/ultralytics/yolov3) for yolov3 source code.
 
@@ -21,7 +21,7 @@ For the  YOLOV4 pytorch version, try this https://github.com/Tianxiaomo/pytorch-
 ### Datasets and  Environment Requirements
 Make a COCO or VOC dataset for this project try here [dataset_for_Ultralytics_training](https://github.com/chumingqian/Make_Dataset-for-Ultralytics-yolov3v4).
 
-The environment is Pytorch >= 1.1.0 , see the ./requiremnts.txt and also we can see [ultralytics/yolov3](https://github.com/ultralytics/yolov3) ./requirements.txt .
+The environment is Pytorch >= 1.1.0 , see the ./requiremnts.txt and also can reference the [ultralytics/yolov3](https://github.com/ultralytics/yolov3) ./requirements.txt .
 
   
 ###  Part1.Common training and sparse training(prepare for the channel pruning) training for object detection datasets
@@ -37,7 +37,7 @@ python3 train.py --data ... --s 0.001 --prune 0  -pt --weights ... --cfg ... --i
 
 1.3 parameter explaination:
 
-`-sr`Sparse training,`--s`Specifies the sparsity factor，`--prune`Specify the sparsity type.
+`-sr`: Sparse training,`--s`: Specifies the sparsity factor，`--prune` :Specify the sparsity type.
 
 `--prune 0` is the sparsity of normal pruning and regular pruning.
 
@@ -45,24 +45,32 @@ python3 train.py --data ... --s 0.001 --prune 0  -pt --weights ... --cfg ... --i
 
 `--prune 2` is the sparsity of layer pruning.
 
-1.4 Notice for the sparse training, the reason for using sparse training before we prune the network  is that  we need to select out the unimportant channels in the network, through the sparse training we can select out and prune  these unimportant channels  in the network. 
-  There  maybe  no   when the  classes  you trian is  not too much ,such 1-5 classes.
+- details see the 2.1.
+
+1.4 Notice for the sparse training:
+
+-The reason for using sparse training before we prune the network is that we need to select out the unimportant channels in the network, through the sparse training we can select out and prune  these unimportant channels in the network.
+    
+-When the classes you trian network is not too much, such 1-5 classes. There maybe  no difference with sparse training or without sparse training before prune the network.
+  
+-When the training classes are above 10 clasees, sparse training  play an important role,  in this situation  prune the channel directly  without sparse training  will  bring an irreparable damage to the network's accuracy, even later use the fine-tune  or distillation it brings  a little effect.   Meanwhile, doing the sparse training firstly,  then prune the network it may reduce the network's accuracy  temporary, after we fine-tune or distilling the pruned  network,  the pruned network's accuracy will be regained.
+   
+   
 ```bash
 python3 train.py --data ... --s 0.001 --prune 0  -pt --weights ... --cfg ... --img_size ...  --batch-size 32  --epochs ...
 ```
 
-1.3 Testing and detect the modle
-`python3 test.py --data ... --cfg ... ` Test command
+1.3 Testing and detect command:
 
-`python3 detect.py --data ... --cfg ... --source ...` Detection command, the default address of source is data/samples, the output result is saved in the output file, and the detection resource can be pictures, videos.
+`python3 test.py --data ... --cfg ... `: Test the mAP@0.5 command
+
+`python3 detect.py --data ... --cfg ... --source ...`: Detection a single image/video command, default address of source is data/samples, the output result is saved in the output file.
 
 
 
-# Model Compression
+### Part2 Model compression algorithm including pruning and knowledge distillation.
 
-## 1. Pruning
-
-### channel pruning types 
+2.1 channel pruning types 
 |<center>method</center> |<center>advantage</center>|<center>disadvantage</center> |
 | --- | --- | --- |
 |Normal pruning        |Not prune for shortcut layer. It has a considerable and stable compression rate that requires no fine tuning.|The compression rate is not extreme.  |
@@ -72,78 +80,64 @@ python3 train.py --data ... --s 0.001 --prune 0  -pt --weights ... --cfg ... --i
 |layer pruning         |ResBlock is used as the basic unit for purning, which is conducive to hardware deployment. |It can only cut backbone. |
 |layer-channel pruning |First, use channel pruning and then use layer pruning, and pruning rate was very high. |Accuracy may be affected. |
 
-### Step
-
-
-2.Sparse training
-
-`-sr`Sparse training,`--s`Specifies the sparsity factor，`--prune`Specify the sparsity type.
-
-`--prune 0` is the sparsity of normal pruning and regular pruning.
-
-`--prune 1` is the sparsity of shortcut pruning.
-
-`--prune 2` is the sparsity of layer pruning.
-
-command：
-
-3.Pruning
-
-- normal pruning
+2.2  Pruning the network command:
+-for the  channel pruning  types:
 ```bash
-python3 normal_prune.py --cfg ... --data ... --weights ... --percent ...
+python3 normal(or regular/shortcut/slim)_prune.py --cfg ... --data ... --weights ... --percent ...
 ```
-- regular pruning
-```bash
-python3 regular_prune.py --cfg ... --data ... --weights ... --percent ...
-```
-- shortcut pruning
-```bash
-python3 shortcut_prune.py --cfg ... --data ... --weights ... --percent ...
-```
+-for the layer pruning(it is actually based on the channel pruning):
 
-- silmming
-```bash
-python3 slim_prune.py --cfg ... --data ... --weights ... --percent ...
-```
-
-- layer pruning
 ```bash
 python3 layer_prune.py --cfg ... --data ... --weights ... --shortcut ...
-```
 
-- layer-channel pruning
-```bash
 python3 layer_channel_prune.py --cfg ... --data ... --weights ... --shortcut ... --percent ...
 ```
 
+-Notice that we can get more compression by increasing the percent value, but if the sparsity is not enough and the percent value is too high, the program will report an error.
 
-It is important to note that the cfg and weights variables in OPT need to be pointed to the cfg and weights files generated by step 2.
 
-In addition, you can get more compression by increasing the percent value in the code.
-(If the sparsity is not enough and the percent value is too high, the program will report an error.)
 
-### Pruning experiment
-1.normal pruning
-oxfordhand，img_size = 608，test on GTX2080Ti*4
+2.3 Network  Knowledge  distillation:
 
-|<center>model</center> |<center>parameter before pruning</center> |<center>mAP before pruning</center>|<center>inference time before pruning</center>|<center>percent</center> |<center>parameter after pruning</center> |<center>mAP after pruning</center> |<center>inference time after pruning</center>
-| --- | --- | --- | --- | --- | --- | --- | --- |
-|yolov3(without fine tuning)     |58.67M   |0.806   |0.1139s   |0.8    |10.32M |0.802 |0.0844s |
-|yolov3-mobilenet(fine tuning)   |22.75M   |0.812   |0.0345s   |0.97   |2.72M  |0.795 |0.0211s |
-|yolov3tiny(fine tuning)         |8.27M    |0.708   |0.0144s   |0.5    |1.13M  |0.641 |0.0116s |
+-The basic distillation method [Distilling the Knowledge in a Neural Network](https://arxiv.org/abs/1503.02531) was proposed by Hinton in 2015, and has been partially improved in combination with the detection network.
 
-2.regular pruning
-oxfordhand，img_size = 608，test ong GTX2080Ti*4
+2.4 Knowledge  distillation command, add the `--t_cfg --t_weights --KDstr`  choice:
 
-|<center>model</center> |<center>parameter before pruning</center> |<center>mAP before pruning</center>|<center>inference time before pruning</center>|<center>percent</center> |<center>parameter after pruning</center> |<center>mAP after pruning</center> |<center>inference time after pruning</center>
-| --- | --- | --- | --- | --- | --- | --- | --- |
-|yolov3(without fine tuning)           |58.67M   |0.806   |0.1139s   |0.8    |12.15M |0.805 |0.0874s |
-|yolov3-mobilenet(fine tuning)   |22.75M   |0.812   |0.0345s   |0.97   |2.75M  |0.803 |0.0208s |
-|yolov3tiny(fine tuning)         |8.27M    |0.708   |0.0144s   |0.5    |1.82M  |0.703 |0.0122s |
+```bash
+python train.py --data ... --batch-size ... --weights ... --cfg ... --img-size ... --epochs ... --t_cfg ... --t_weights ...
+```
+ 
+`--t_cfg` :cfg file of teacher model   `--t_weights`: weights file of teacher model    `--KDstr` :KD strategy
 
-## 2.quantization
 
+    `--KDstr 1` KLloss can be obtained directly from the output of teacher network and the output of student network and added to the overall loss.
+    `--KDstr 2` To distinguish between box loss and class loss, the student does not learn directly from the teacher. L2 distance is calculated respectively for student, teacher and GT. When student is greater than teacher, an additional loss is added for student and GT.
+    `--KDstr 3` To distinguish between Boxloss and ClassLoss, the student learns directly from the teacher.
+    `--KDstr 4` KDloss is divided into three categories, box loss, class loss and feature loss.
+    `--KDstr 5` On the basis of KDstr 4, the fine-grain-mask is added into the feature
+
+
+Usually, the original(or unpruned model but has been sparse trained) model is used as the teacher model, and the post-compression model is used as the student model for distillation training to improve the mAP of student network.
+
+
+
+### Part3. A brief introduce for Network quantization
+
+3.1 Due to the model weight has been  quantized   from  FP32  to INT8:
+
+- Most our  personal PC  machine  can not  run the quantized  model with this  int8  data type.
+
+- And quantization method  usually  co-operate with  specific hardware  platform,  such  as Xilinx  use Vitis Ai to quantize the model and deploy on the Zynq-ultraScale  series(like pynq-z2, ultra_96_v2, ZCU104);  Nvidia  use  TensorRT to quantize the model  and deploy  it on the Jetson (like Nano, TX1, TX2) ;  Here  are  the reference  we  use  their  tools  to deploy  our pruned  yolov4 network  on thier  hardware  target,  [On Ultra_96_v2](https://github.com/chumingqian/Deploy_Yolov4_On_Ultra96_v2), [On Jetson Nano](https://github.com/chumingqian/Deploy_Yolov4_On_Jetson_Nano).
+
+
+3.2 Recently, the Pytorch 1.8 has launch a "torch.fx" module:
+
+-This would be a fortune for  us  to  reasearch  on  the  quantization;
+
+-We wish we  can bring  the other  repository  that  focus on  quantization,  God bless us.
+
+
+3.3 Quantize  command:
 `--quantized 2` Dorefa quantization method
 
 ```bash
@@ -157,51 +151,6 @@ python train.py --data ... --batch-size ... --weights ... --cfg ... --img-size .
 ```
 
 `--BN_Flod` using BN Flod training, `--FPGA` Pow(2) quantization for FPGA.
-### experiment
-oxfordhand, yolov3, 640image-size
-|<center>method</center> |<center>mAP</center> |
-| --- | --- |
-|Baseline                     |0.847    |
-|Google8bit                   |0.851    |
-|Google8bit + BN Flod         |0.851    |
-|Google8bit + BN Flod + FPGA  |0.852    |
-|Google4bit + BN Flod + FPGA  |0.842    |
-## 3.Knowledge Distillation
-
-### Knowledge Distillation
-The distillation method is based on the basic distillation method proposed by Hinton in 2015, and has been partially improved in combination with the detection network.
-
-Distilling the Knowledge in a Neural Network
-[paper](https://arxiv.org/abs/1503.02531)
-
-command : `--t_cfg --t_weights --KDstr` 
-
-`--t_cfg` cfg file of teacher model
-
-`--t_weights` weights file of teacher model
-
-`--KDstr` KD strategy
-
-    `--KDstr 1` KLloss can be obtained directly from the output of teacher network and the output of student network and added to the overall loss.
-    `--KDstr 2` To distinguish between box loss and class loss, the student does not learn directly from the teacher. L2 distance is calculated respectively for student, teacher and GT. When student is greater than teacher, an additional loss is added for student and GT.
-    `--KDstr 3` To distinguish between Boxloss and ClassLoss, the student learns directly from the teacher.
-    `--KDstr 4` KDloss is divided into three categories, box loss, class loss and feature loss.
-    `--KDstr 5` On the basis of KDstr 4, the fine-grain-mask is added into the feature
-
-example:
-
-```bash
-python train.py --data ... --batch-size ... --weights ... --cfg ... --img-size ... --epochs ... --t_cfg ... --t_weights ...
-```
-
-Usually, the pre-compression model is used as the teacher model, and the post-compression model is used as the student model for distillation training to improve the mAP of student network.
-
-### experiment
-oxfordhand，yolov3tiny as teacher model，normal pruning yolov3tiny as student model
-
-|<center>teacher model</center> |<center>mAP of teacher model</center> |<center>student model</center>|<center>directly fine tuning</center>|<center>KDstr 1</center> |<center>KDstr 2</center> |<center>KDstr 3</center>  |<center>KDstr 4(L1)</center> |<center>KDstr 5(L1)</center> |
-| --- | --- | --- | --- | --- | --- | --- |--- |--- |
-|yolov3tiny608   |0.708    |normal pruning yolov3tiny608    |0.658     |0.666    |0.661  |0.672   |0.673   |0.674   |
 
 
 
@@ -212,6 +161,9 @@ Pruning method based on BN layer comes from [Learning Efficient Convolutional Ne
 
 Pruning without fine-tune [Rethinking the Smaller-Norm-Less-Informative Assumption in Channel Pruning of Convolution Layers](https://arxiv.org/pdf/1802.00124.pdf).
 
+Attenton transfer distilling [Paying More Attention to Attention: Improving the Performance of Convolutional Neural Networks via Attention Transfer](https://arxiv.org/abs/1612.03928)
+
+-----
 
 Channel pruning method based on BN layers for the  yolov3 and yolov4, we recommond the following repository:
 
