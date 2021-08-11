@@ -1,36 +1,31 @@
-
-
-# YOLOv3-ModelCompression-MultidatasetTraining
-
-[README in chinese](https://github.com/chumingqian/Model_Compression_For_YOLOV4/blob/main/README_in_Chinese.md)
+# YOLOv3v4 -ModelCompression-Training
 
 This project mainly include three parts.
 
-1.Provides training methods for multiple mainstream object detection datasets(coco2017, coco2014, BDD100k, Visdrone, Hand)
+1.Training for three object detection datasets(COCO2017, VOC, OxforHand)
 
-2.Provides a mainstream model compression algorithm including pruning, quantization, and knowledge distillation.
+2.Support a general model compression algorithm including pruning, quantization, and knowledge distillation.
 
-3.Provides multiple backbone for yolov3 including Darknet-YOLOv3，Tiny-YOLOv3，Mobilenetv3-YOLOv3
+3.Support for yolov4 and yolov3 netwrok.
 
 Source using Pytorch implementation to [ultralytics/yolov3](https://github.com/ultralytics/yolov3) for yolov3 source code.
-Pruning method based on BN layer by [coldlarry/YOLOv3-complete-pruning](https://github.com/coldlarry/YOLOv3-complete-pruning), thank you to both of you.
+Pruning method based on BN layer comes from [Learning Efficient Convolutional Networks through Network Slimming](https://arxiv.org/abs/1708.06519),
+and pruning without fine-tuning [Rethinking the Smaller-Norm-Less-Informative Assumption in Channel Pruning of Convolution Layers](https://arxiv.org/pdf/1802.00124.pdf).
 
+-----
 
-#  Note:
-this  repository  is  heavily borrrowed  from these two  repository,  https://github.com/tanluren/yolov3-channel-and-layer-pruning  and  https://github.com/SpursLipu/YOLOv3v4-ModelCompression-MultidatasetTraining-Multibackbone  if  you want the  details  try them .
+Channel pruning method based on BN layers for the  yolov3 and yolov4, we recommond the following repository:
+
+https://github.com/tanluren/yolov3-channel-and-layer-pruning
+
+[coldlarry/YOLOv3-complete-pruning](https://github.com/coldlarry/YOLOv3-complete-pruning)
+ 
+https://github.com/SpursLipu/YOLOv3v4-ModelCompression-MultidatasetTraining-Multibackbone
+
+Thanks  for  you contributions.  
 
 
 # Update
- January 4, 2020. Provides download links and training methods to the Visdrone dataset.
- 
- January 19, 2020. Dior, Bdd100k and Visdrone training will be provided, as well as the converted weights file.
- 
- March 1, 2020. Provides Mobilenetv3 backbone.
- 
- April 7, 2020. Implement two models based on Mobilenetv3: Yolov3-Mobilenet, and Yolov3tin-Mobilene-small, provide pre-training weights, extend the normal pruning methods to the two Mobilenet-based models.
-
- April 27, 2020. Update mobilenetv3  pre-training weights, add a layer pruning method, methods from the [tanluren/yolov3-channel-and-layer-pruning/yolov3](https://github.com/tanluren/yolov3-channel-and-layer-pruning),
-Thanks for sharing.
  
  May 22, 2020 Updated some new optimizations from [ultralytics/yolov3](https://github.com/ultralytics/yolov3), update cfg file and weights of YOLOv4.
  
@@ -424,3 +419,4 @@ oxfordhand，yolov3tiny as teacher model，normal pruning yolov3tiny as student 
 |<center>teacher model</center> |<center>mAP of teacher model</center> |<center>student model</center>|<center>directly fine tuning</center>|<center>KDstr 1</center> |<center>KDstr 2</center> |<center>KDstr 3</center>  |<center>KDstr 4(L1)</center> |<center>KDstr 5(L1)</center> |
 | --- | --- | --- | --- | --- | --- | --- |--- |--- |
 |yolov3tiny608   |0.708    |normal pruning yolov3tiny608    |0.658     |0.666    |0.661  |0.672   |0.673   |0.674   |
+
