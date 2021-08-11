@@ -1,5 +1,5 @@
 # Model_Compression_For_YOLOV4
-In this  repository  using the sparse training, group pruning and  knowledge distilling for  YOLOV3 and YOLOV4
+In this  repository  using the sparse training, channel pruning and  knowledge distilling for  YOLOV3 and YOLOV4
 
 
 # YOLOv3v4 -ModelCompression-Training
