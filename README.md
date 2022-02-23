@@ -33,7 +33,7 @@ The environment is Pytorch >= 1.1.0 , see the ./requiremnts.txt and also can ref
 
 1.2 For the sparse training use the:
 ```bash
-python3 train.py --data ... --s 0.001 --prune 0  -pt --weights ... --cfg ... --img_size ...  --batch-size 32  --epochs ...
+python3 train.py --data ... -sr --s 0.001 --prune 0  -pt --weights ... --cfg ... --img_size ...  --batch-size 32  --epochs ...
 ```
 
 1.3 parameter explaination:
@@ -59,7 +59,7 @@ python3 train.py --data ... --s 0.001 --prune 0  -pt --weights ... --cfg ... --i
    
    
 ```bash
-python3 train.py --data ... --s 0.001 --prune 0  -pt --weights ... --cfg ... --img_size ...  --batch-size 32  --epochs ...
+python3 train.py --data ... -sr --s 0.001 --prune 0  -pt --weights ... --cfg ... --img_size ...  --batch-size 32  --epochs ...
 ```
 
 1.3 Testing and detect command:
