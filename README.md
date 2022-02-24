@@ -62,7 +62,33 @@ python3 train.py --data ... -sr --s 0.001 --prune 0  -pt --weights ... --cfg ...
 python3 train.py --data ... -sr --s 0.001 --prune 0  -pt --weights ... --cfg ... --img_size ...  --batch-size 32  --epochs ...
 ```
 
-1.3 Testing and detect command:
+
+
+1.5  The original weights  distribution  and  sparse training weights distribution
+
+
+<div align="center">
+<img src="./image_in_readme/01_original_distribution.png" width = "700" height = "360" />
+ 123
+</div>	
+
+
+<center>
+    <img style="border-radius: 0.6125em;
+    box-shadow: 0 2px 4px 0 rgba(34,36,38,.12),0 2px 10px 0 rgba(34,36,38,.08);" 
+    src=" ./image_in_readme/01_original_distribution.png"  width = "700" height = "500">
+    <br>
+    <div style="color:orange; border-bottom: 1px solid #d9d9d9;
+    display: inline-block;
+    color: #999;
+    padding: 2px;">  original weights  distribution </div>
+</center>
+
+
+
+
+
+1.7 Testing and detect command:
 
 `python3 test.py --data ... --cfg ... `: Test the mAP@0.5 command
 
