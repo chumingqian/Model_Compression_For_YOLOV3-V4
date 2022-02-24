@@ -26,17 +26,17 @@ The environment is Pytorch >= 1.1.0 , see the ./requiremnts.txt and also can ref
   
 ###  Part1.Common training and sparse training(prepare for the channel pruning)  for object detection datasets
 
-1.1 For the common training use the following command: 
+#### 1.1 For the common training use the following command: 
 
    `python3 train.py --data ...  --cfg ...  -pt  --weights ...  --img_size ... --batch-size ... --epochs  ... ` :
       ` -pt means that will  use the pretrained  model's weight`.
 
-1.2 For the sparse training use the:
+#### 1.2 For the sparse training use the:
 ```bash
 python3 train.py --data ... -sr --s 0.001 --prune 0  -pt --weights ... --cfg ... --img_size ...  --batch-size 32  --epochs ...
 ```
 
-1.3 parameter explaination:
+#### 1.3 parameter explaination:
 
 `-sr`: Sparse training,`--s`: Specifies the sparsity factor，`--prune` :Specify the sparsity type.
 
@@ -49,7 +49,7 @@ python3 train.py --data ... -sr --s 0.001 --prune 0  -pt --weights ... --cfg ...
 -`details see the 2.1`.
 
 
-1.4 Notice for the sparse training:
+#### 1.4 Notice for the sparse training:
 
 -The reason for using sparse training before we prune the network is that we need to select out the unimportant channels in the network, through the sparse training we can select out and prune  these unimportant channels in the network.
     
@@ -64,43 +64,49 @@ python3 train.py --data ... -sr --s 0.001 --prune 0  -pt --weights ... --cfg ...
 
 
 
-1.5  The original weights  distribution  and  sparse training weights distribution
+#### 1.5  The original weights  distribution  and  sparse training weights distribution
 
 
 <div align="center">
-<img src="./image_in_readme/01_original_distribution.png" width = "700" height = "360" />
- 123
-</div>	
+   <img src="./image_in_readme/01_original_distribution.png"  height=200><img src="./image_in_readme/02_sparse_training.png" height=200>
+   <div style="color:orange; border-bottom: 1px solid #d9d9d9;
+    display: inline-block;
+    color: #999;
+    padding: 2px;"
+    > Fig1: left- the original weight distribution  right: the weight distribution after sprse training </div>
+</div>
+
+<br>
 
 
 <center>
-    <img style="border-radius: 0.6125em;
+    <img style="border-radius: 0.3125em;
     box-shadow: 0 2px 4px 0 rgba(34,36,38,.12),0 2px 10px 0 rgba(34,36,38,.08);" 
-    src=" ./image_in_readme/01_original_distribution.png"  width = "700" height = "500">
-    <br>
+    src="./image_in_readme/03_sparse_training.png" width = "65%" alt=""/> 
     <div style="color:orange; border-bottom: 1px solid #d9d9d9;
     display: inline-block;
     color: #999;
-    padding: 2px;">  original weights  distribution </div>
+    padding: 2px;"
+    > Fig2: The mAP during the  sparse training on the VOC dataset </div>
+    <br>
 </center>
 
 
 
+  
 
-
-1.7 Testing and detect command:
+#### 1.6 Testing and detect command:
 
 `python3 test.py --data ... --cfg ... `: Test the mAP@0.5 command
 
 `python3 detect.py --data ... --cfg ... --source ...`: Detection a single image/video command, default address of source is data/samples, the output result is saved in the output file.
-
 
 -------
 
 
 ### Part2 Model compression algorithm including pruning and knowledge distillation.
 
-2.1 channel pruning types 
+#### 2.1 channel pruning types 
 |<center>method</center> |<center>advantage</center>|<center>disadvantage</center> |
 | --- | --- | --- |
 |Normal pruning        |Not prune for shortcut layer. It has a considerable and stable compression rate that requires no fine tuning.|The compression rate is not extreme.  |
@@ -110,7 +116,7 @@ python3 train.py --data ... -sr --s 0.001 --prune 0  -pt --weights ... --cfg ...
 |layer pruning         |ResBlock is used as the basic unit for purning, which is conducive to hardware deployment. |It can only cut backbone. |
 |layer-channel pruning |First, use channel pruning and then use layer pruning, and pruning rate was very high. |Accuracy may be affected. |
 
-2.2  Pruning the network command:
+#### 2.2  Pruning the network command:
 
 -for the  channel pruning  types:
 ```bash
@@ -128,11 +134,17 @@ python3 layer_channel_prune.py --cfg ... --data ... --weights ... --shortcut ...
 
 
 
-2.3 Network  Knowledge  distillation:
+#### 2.3 Network  Knowledge  distillation:
+
+
+##### 2.3.1 Important Notice 
+- For the pruned model,  we can fine tune 20~ 50 epochs to recover the pruned model's accuracy!
+- After that we use the pruned and fine-tuned model  as student network, the original network(before sparse training ) to do the  knowledge distillation.
+
 
 -The basic distillation method [Distilling the Knowledge in a Neural Network](https://arxiv.org/abs/1503.02531) was proposed by Hinton in 2015, and has been partially improved in combination with the detection network.
 
-2.4 Knowledge  distillation command, add the `--t_cfg --t_weights --KDstr`  choice:
+#### 2.4 Knowledge  distillation command, add the `--t_cfg --t_weights --KDstr`  choice:
 
 ```bash
 python train.py --data ... --batch-size ... --weights ... --cfg ... --img-size ... --epochs ... --t_cfg ... --t_weights ...
@@ -157,7 +169,7 @@ Usually, the original(or unpruned model but has been sparse trained) model is us
 
 ### Part3. A brief introduce for Network quantization
 
-3.1 Due to the model weight has been  quantized   from  FP32  to INT8:
+#### 3.1 Due to the model weight has been  quantized   from  FP32  to INT8:
 
 - Most our  personal PC  machine  can not  run the quantized  model with this  int8  data type.
 
@@ -166,7 +178,7 @@ Usually, the original(or unpruned model but has been sparse trained) model is us
 - Here  are  the reference [On Ultra_96_v2](https://github.com/chumingqian/Deploy_Yolov4_On_Ultra96_v2), [On Jetson Nano](https://github.com/chumingqian/Deploy_Yolov4_On_Jetson_Nano)  we  use  their  tools  quantize our pruned  yolov4 network  and deploy it on thier  hardware  target.
 
 
-3.2 Recently, the Pytorch 1.8 has launch a "torch.fx" module:
+#### 3.2 Recently, the Pytorch 1.8 has launch a "torch.fx" module:
 
 -This would be a fortune for  us  to  reasearch  on  the  quantization;
 
@@ -174,7 +186,7 @@ Usually, the original(or unpruned model but has been sparse trained) model is us
 
 
 
-3.3 Quantize  command:
+#### 3.3 Quantize  command:
 `--quantized 2` Dorefa quantization method
 
 ```bash
