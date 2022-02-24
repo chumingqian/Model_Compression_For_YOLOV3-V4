@@ -12,7 +12,7 @@ Part2.  General model compression algorithm including pruning and knowledge dist
 
 Part3.  A brief introduce for Network quantization .
 
-Source using Pytorch implementation to [ultralytics/yolov3](https://github.com/ultralytics/yolov3) for yolov3 source code.
+Source code using Pytorch implementation to [ultralytics/yolov3](https://github.com/ultralytics/yolov3) for yolov3 source code.
 
 For the  YOLOV4 pytorch version, try this https://github.com/Tianxiaomo/pytorch-YOLOv4.
 
