@@ -1,5 +1,8 @@
 # Model_Compression_For_YOLOV4
-In this  repository  using the dynamic sparse training( variable sparse rate s which can speed up the sparse training process), channel pruning and  knowledge distilling for  YOLOV3 and YOLOV4
+In this  repository  using the dynamic sparse training( variable sparse rate s which can speed up the sparse training process), channel pruning and  knowledge distilling for  YOLOV3 and YOLOV4;
+
+Here is our paper [Group channel pruning and spatial attention distilling for object detection](https://link.springer.com/article/10.1007/s10489-022-03293-x)
+
 
 
 # YOLOv3v4 -ModelCompression-Training
@@ -200,6 +203,26 @@ python train.py --data ... --batch-size ... --weights ... --cfg ... --img-size .
 ```
 
 `--BN_Flod` using BN Flod training, `--FPGA` Pow(2) quantization for FPGA.
+
+
+
+
+
+### 4 Cite
+
+If  this project has helped you,   you can cite our paper, thanks.
+
+@article{chu2022group,
+  title={Group channel pruning and spatial attention distilling for object detection},
+  author={Chu, Yun and Li, Pu and Bai, Yong and Hu, Zhuhua and Chen, Yongqing and Lu, Jiafeng},
+  journal={Applied Intelligence},
+  pages={1--19},
+  year={2022},
+  publisher={Springer}
+}
+
+
+Chu Y, Li P, Bai Y, et al. Group channel pruning and spatial attention distilling for object detection[J]. Applied Intelligence, 2022: 1-19.
 
 
 
