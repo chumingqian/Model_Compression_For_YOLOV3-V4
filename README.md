@@ -222,7 +222,7 @@ If  this project has helped you,   you can cite our paper, thanks.
 }
 
 
-Chu Y, Li P, Bai Y, et al. Group channel pruning and spatial attention distilling for object detection[J]. Applied Intelligence, 2022: 1-19.
+
 
 
 
