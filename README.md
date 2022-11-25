@@ -210,7 +210,7 @@ python train.py --data ... --batch-size ... --weights ... --cfg ... --img-size .
 
 ### 4 Cite
 
-If  this project has helped you,   you can cite our paper, thanks.
+If  this project has helped you,   please cite our work, thanks.
 
 @article{chu2022group,
   title={Group channel pruning and spatial attention distilling for object detection},
