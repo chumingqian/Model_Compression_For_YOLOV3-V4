@@ -5,41 +5,45 @@ Here is our paper [Group channel pruning and spatial attention distilling for ob
 
 
 
-# YOLOv3v4 -ModelCompression-Training
+
+
+# 1. YOLOv3v4 -ModelCompression-Training
 
 This repository  project mainly include three parts.
 
-Part1.  Common training and sparse training(prepare for the channel pruning) for object detection datasets(COCO2017, VOC, OxforHand).
+- Part1.  Common training and sparse training(prepare for the channel pruning) for object detection datasets(COCO2017, VOC, OxforHand).
 
-Part2.  General model compression algorithm including pruning and knowledge distillation.
+- Part2.  General model compression algorithm including pruning and knowledge distillation.
 
-Part3.  A brief introduce for Network quantization .
+- Part3.  A brief introduce for Network quantization .
 
 Source code using Pytorch implementation to [ultralytics/yolov3](https://github.com/ultralytics/yolov3) for yolov3 source code.
 
 For the  YOLOV4 pytorch version, try this https://github.com/Tianxiaomo/pytorch-YOLOv4.
 
 
-### Datasets and  Environment Requirements
+# 2.  Datasets and  Environment Requirements
 Make a COCO or VOC dataset for this project try here [dataset_for_Ultralytics_training](https://github.com/chumingqian/Make_Dataset-for-Ultralytics-yolov3v4).
 
 The environment is Pytorch >= 1.1.0 , see the ./requiremnts.txt and also can reference the [ultralytics/yolov3](https://github.com/ultralytics/yolov3) ./requirements.txt .
 
 ---------
   
-###  Part1.Common training and sparse training(prepare for the channel pruning)  for object detection datasets
+# 3.   Part1. Common training and sparse training
 
-#### 1.1 For the common training use the following command: 
+ here sparse training on  object detection datasets  is prepared for the channel pruning .
+
+## 3.1 For the common training use the following command: 
 
    `python3 train.py --data ...  --cfg ...  -pt  --weights ...  --img_size ... --batch-size ... --epochs  ... ` :
       ` -pt means that will  use the pretrained  model's weight`.
 
-#### 1.2 For the sparse training use the:
+## 3.2 For the sparse training use the:
 ```bash
 python3 train.py --data ... -sr --s 0.001 --prune 0  -pt --weights ... --cfg ... --img_size ...  --batch-size 32  --epochs ...
 ```
 
-#### 1.3 parameter explaination:
+## 3.3 parameter explaination:
 
 `-sr`: Sparse training,`--s`: Specifies the sparsity factor，`--prune` :Specify the sparsity type.
 
@@ -52,7 +56,7 @@ python3 train.py --data ... -sr --s 0.001 --prune 0  -pt --weights ... --cfg ...
 -`details see the 2.1`.
 
 
-#### 1.4 Notice for the sparse training:
+## 3.4 Notice for the sparse training:
 
 -The reason for using sparse training before we prune the network is that we need to select out the unimportant channels in the network, through the sparse training we can select out and prune  these unimportant channels in the network.
     
@@ -67,7 +71,7 @@ python3 train.py --data ... -sr --s 0.001 --prune 0  -pt --weights ... --cfg ...
 
 
 
-#### 1.5  The original weights  distribution  and  sparse training weights distribution
+## 3.5  The original weights  distribution  and  sparse training weights distribution
 
 
 <div align="center">
@@ -98,7 +102,7 @@ python3 train.py --data ... -sr --s 0.001 --prune 0  -pt --weights ... --cfg ...
 
   
 
-#### 1.6 Testing and detect command:
+## 3.6 Testing and detect command:
 
 `python3 test.py --data ... --cfg ... `: Test the mAP@0.5 command
 
@@ -107,9 +111,11 @@ python3 train.py --data ... -sr --s 0.001 --prune 0  -pt --weights ... --cfg ...
 -------
 
 
-### Part2 Model compression algorithm including pruning and knowledge distillation.
+#  4. Part2 Model compression algorithm 
 
-#### 2.1 channel pruning types 
+this part  included pruning and knowledge distillation.
+
+## 4.1 channel pruning types 
 |<center>method</center> |<center>advantage</center>|<center>disadvantage</center> |
 | --- | --- | --- |
 |Normal pruning        |Not prune for shortcut layer. It has a considerable and stable compression rate that requires no fine tuning.|The compression rate is not extreme.  |
@@ -119,7 +125,7 @@ python3 train.py --data ... -sr --s 0.001 --prune 0  -pt --weights ... --cfg ...
 |layer pruning         |ResBlock is used as the basic unit for purning, which is conducive to hardware deployment. |It can only cut backbone. |
 |layer-channel pruning |First, use channel pruning and then use layer pruning, and pruning rate was very high. |Accuracy may be affected. |
 
-#### 2.2  Pruning the network command:
+## 4.2  Pruning the network command:
 
 -for the  channel pruning  types:
 ```bash
@@ -137,17 +143,17 @@ python3 layer_channel_prune.py --cfg ... --data ... --weights ... --shortcut ...
 
 
 
-#### 2.3 Network  Knowledge  distillation:
+## 4.3 Network  Knowledge  distillation:
 
 
-##### 2.3.1 Important Notice 
+### 4.3.1 Important Notice 
 - For the pruned model,  we can fine tune 20~ 50 epochs to recover the pruned model's accuracy!
 - After that we use the pruned and fine-tuned model  as student network, the original network(before sparse training ) to do the  knowledge distillation.
 
 
 -The basic distillation method [Distilling the Knowledge in a Neural Network](https://arxiv.org/abs/1503.02531) was proposed by Hinton in 2015, and has been partially improved in combination with the detection network.
 
-#### 2.4 Knowledge  distillation command, add the `--t_cfg --t_weights --KDstr`  choice:
+### 4.3.2 Knowledge  distillation command, add the `--t_cfg --t_weights --KDstr`  choice:
 
 ```bash
 python train.py --data ... --batch-size ... --weights ... --cfg ... --img-size ... --epochs ... --t_cfg ... --t_weights ...
@@ -170,9 +176,9 @@ Usually, the original(or unpruned model but has been sparse trained) model is us
 
 
 
-### Part3. A brief introduce for Network quantization
+# 5 Part3. A brief introduce for Network quantization
 
-#### 3.1 Due to the model weight has been  quantized   from  FP32  to INT8:
+## 5.1 Due to the model weight has been  quantized   from  FP32  to INT8:
 
 - Most our  personal PC  machine  can not  run the quantized  model with this  int8  data type.
 
@@ -181,7 +187,7 @@ Usually, the original(or unpruned model but has been sparse trained) model is us
 - Here  are  the reference [On Ultra_96_v2](https://github.com/chumingqian/Deploy_Yolov4_On_Ultra96_v2), [On Jetson Nano](https://github.com/chumingqian/Deploy_Yolov4_On_Jetson_Nano)  we  use  their  tools  quantize our pruned  yolov4 network  and deploy it on thier  hardware  target.
 
 
-#### 3.2 Recently, the Pytorch 1.8 has launch a "torch.fx" module:
+## 5.2 Recently, the Pytorch 1.8 has launch a "torch.fx" module:
 
 -This would be a fortune for  us  to  reasearch  on  the  quantization;
 
@@ -189,7 +195,7 @@ Usually, the original(or unpruned model but has been sparse trained) model is us
 
 
 
-#### 3.3 Quantize  command:
+## 5.3 Quantize  command:
 `--quantized 2` Dorefa quantization method
 
 ```bash
@@ -208,25 +214,7 @@ python train.py --data ... --batch-size ... --weights ... --cfg ... --img-size .
 
 
 
-### 4 Cite
-
-If  this project has helped you,   please cite our work, thanks.
-
-@article{chu2022group,
-  title={Group channel pruning and spatial attention distilling for object detection},
-  author={Chu, Yun and Li, Pu and Bai, Yong and Hu, Zhuhua and Chen, Yongqing and Lu, Jiafeng},
-  journal={Applied Intelligence},
-  pages={1--19},
-  year={2022},
-  publisher={Springer}
-}
-
-
-
-
-
-
-## Reference: 
+# Reference: 
 ----
 -Papers:
 Pruning method based on BN layer comes from [Learning Efficient Convolutional Networks through Network Slimming](https://arxiv.org/abs/1708.06519).
@@ -245,3 +233,27 @@ https://github.com/tanluren/yolov3-channel-and-layer-pruning
 https://github.com/SpursLipu/YOLOv3v4-ModelCompression-MultidatasetTraining-Multibackbone
 
 Thanks  for  your contributions.  
+
+
+
+# Cite our works
+
+If  this project has helped you,   please cite our work, thanks.
+
+@article{chu2022group,
+  
+  title={Group channel pruning and spatial attention distilling for object detection},
+  
+  author={Chu, Yun and Li, Pu and Bai, Yong and Hu, Zhuhua and Chen, Yongqing and Lu, Jiafeng},
+  
+  journal={Applied Intelligence},
+  
+  pages={1--19},
+  year={2022},
+  
+  publisher={Springer}
+}
+
+
+
+
