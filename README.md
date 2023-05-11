@@ -1,8 +1,7 @@
 # Model_Compression_For_YOLOV4
 In this  repository  using the dynamic sparse training( variable sparse rate s which can speed up the sparse training process), channel pruning and  knowledge distilling for  YOLOV3 and YOLOV4;
 
-Here is our paper [Group channel pruning and spatial attention distilling for object detection](https://link.springer.com/article/10.1007/s10489-022-03293-x)
-
+And  if you like it, give it star. 
 
 
 
@@ -236,9 +235,9 @@ Thanks  for  your contributions.
 
 
 
-# Cite our works
+# Further reading
+Here is our paper [Group channel pruning and spatial attention distilling for object detection](https://link.springer.com/article/10.1007/s10489-022-03293-x)
 
-If  this project has helped you,   please cite our work, thanks.
 
 @article{chu2022group,
   
