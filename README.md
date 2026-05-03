@@ -235,23 +235,6 @@ Thanks  for  your contributions.
 
 
 
-# Further reading
-Here is our paper [Group channel pruning and spatial attention distilling for object detection](https://link.springer.com/article/10.1007/s10489-022-03293-x)
-
-
-@article{chu2022group,
-  
-  title={Group channel pruning and spatial attention distilling for object detection},
-  
-  author={Chu, Yun and Li, Pu and Bai, Yong and Hu, Zhuhua and Chen, Yongqing and Lu, Jiafeng},
-  
-  journal={Applied Intelligence},
-  
-  pages={1--19},
-  year={2022},
-  
-  publisher={Springer}
-}
 
 
 
